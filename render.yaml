@@ -2,11 +2,15 @@ services:
   - type: web
     name: cliproxy-api
     runtime: docker
+
     region: singapore
+
     plan: starter
+
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    healthCheckPath: /
+
+    healthCheckPath: /v1/models
 
     envVars:
       - key: MANAGEMENT_KEY

@@ -8,34 +8,25 @@ export TZ
 export HOME=/data
 
 mkdir -p /data/auth
-mkdir -p /data/plugins
 mkdir -p /data/logs
+mkdir -p /data/plugins
 
-# Persist CLIProxyAPI authentication data
+# Persist CLIProxyAPI authentication
 mkdir -p /root
 
 if [ ! -e /root/.cli-proxy-api ]; then
     ln -s /data/auth /root/.cli-proxy-api
 fi
 
-# Create persistent configuration on first startup
+# Create config on first boot
 if [ ! -f /data/config.yaml ]; then
     cp /CLIProxyAPI/config.template.yaml /data/config.yaml
 fi
 
-# Update server port
-sed -i "s/^  port: .*/  port: ${PORT}/" /data/config.yaml
+# Keep Render's port
+sed -i "s/^port: .*/port: ${PORT}/" /data/config.yaml
 
-# Set management key only if the placeholder is still present
-if [ -n "${MANAGEMENT_KEY:-}" ]; then
-    ESCAPED_KEY=$(printf '%s' "$MANAGEMENT_KEY" | sed 's/[&|\\]/\\&/g')
-
-    sed -i \
-        "s|__MANAGEMENT_KEY__|${ESCAPED_KEY}|g" \
-        /data/config.yaml
-fi
-
-# Set client API key
+# Configure API key only if placeholder exists
 if [ -n "${API_KEY:-}" ]; then
     ESCAPED_API_KEY=$(printf '%s' "$API_KEY" | sed 's/[&|\\]/\\&/g')
 
@@ -46,13 +37,17 @@ else
     sed -i '/__API_KEY__/d' /data/config.yaml
 fi
 
-echo "========================================"
-echo "CLIProxyAPI"
-echo "========================================"
+echo "======================================"
+echo "CLIProxyAPI starting"
+echo "======================================"
 echo "Port: ${PORT}"
 echo "Config: /data/config.yaml"
 echo "Auth: /data/auth"
-echo "Management API: enabled"
-echo "========================================"
+echo "Management: enabled"
+echo "======================================"
+
+# IMPORTANT:
+# MANAGEMENT_PASSWORD is supplied directly by Render.
+# Do NOT write it into config.yaml.
 
 exec /CLIProxyAPI/CLIProxyAPI --config /data/config.yaml

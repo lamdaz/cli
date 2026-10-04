@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: cliproxy-api
+    runtime: docker
+    region: singapore
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /
+
+    envVars:
+      - key: MANAGEMENT_KEY
+        generateValue: true
+
+      - key: API_KEY
+        generateValue: true
+
+      - key: PORT
+        value: "8317"
+
+      - key: TZ
+        value: "Asia/Dhaka"
+
+    disk:
+      name: cliproxy-data
+      mountPath: /data
+      sizeGB: 1

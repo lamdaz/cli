@@ -1,0 +1,20 @@
+# Render-ready minimal CLIProxyAPI configuration.
+# The entrypoint replaces placeholders using Render environment variables.
+
+host: ""
+port: 8317
+
+tls:
+  enable: false
+  cert: ""
+  key: ""
+
+# Remote management is required for the web management panel on Render.
+allow-remote: true
+secret-key: "__MANAGEMENT_KEY__"
+
+disable-control-panel: false
+
+access:
+  api-keys:
+    - "__API_KEY__"

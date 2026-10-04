@@ -4,7 +4,6 @@ services:
     runtime: docker
 
     region: singapore
-
     plan: starter
 
     dockerfilePath: ./Dockerfile
@@ -13,9 +12,12 @@ services:
     healthCheckPath: /v1/models
 
     envVars:
-      - key: MANAGEMENT_KEY
+
+      # THIS IS THE MANAGEMENT LOGIN PASSWORD
+      - key: MANAGEMENT_PASSWORD
         generateValue: true
 
+      # API key for /v1/*
       - key: API_KEY
         generateValue: true
 
